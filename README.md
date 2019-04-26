@@ -32,3 +32,17 @@ def index():
         light.light() //lights uHat on new order creation
     return "Success"
 ```
+
+
+## Flowmeter counter
+
+```bash
+#// if a plastic sensor use the following calculation
+  // Sensor Frequency (Hz) = 7.5 * Q (Liters/min)
+  // Liters = Q * time elapsed (seconds) / 60 (seconds/minute)
+  // Liters = (Frequency (Pulses/second) / 7.5) * time elapsed (seconds) / 60
+  // Liters = Pulses / (7.5 * 60)
+  float liters = pulses;
+  liters /= 7.5;
+  liters /= 60.0;
+  ``
