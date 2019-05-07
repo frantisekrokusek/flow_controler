@@ -1,6 +1,8 @@
 from gpiozero import LineSensor
 from signal import pause
 import time, sys
+import httplib
+
 
 sensor = LineSensor(4)
 
@@ -11,15 +13,8 @@ def countPulse():
     global count
     count += 1
     print(count);
+    conn = httplib.HTTPSConnection('en03hwbtjrvx4g.x.pipedream.net')
+    conn.request("POST", "/", '{ "pipe_name": "Pilsner"; "quantity": {count} }', {'Content-Type': 'application/json'})
 
-sensor.when_line = lambda: countPulse
-sensor.when_no_line = lambda: print('No line detected')
-pause()
 
-while True:
-    try:
-        time.sleep(1)
-    except KeyboardInterrupt:
-        print('\ncaught keyboard interrupt!, bye')
-        GPIO.cleanup()
-        sys.exit()
+sensor.when_line = countPulse
