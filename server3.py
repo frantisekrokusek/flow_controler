@@ -73,6 +73,5 @@ try:
 except:
     print("Exception triggered - Tornado Server stopped.")
     vanne.off()
-    break
 
 
