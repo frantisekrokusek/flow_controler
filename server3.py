@@ -30,7 +30,7 @@ def counter():
         if time.clock() > 20 :
             print('waited too long')
             vanne.off()
-            os._exit(0)
+            break
         else:
             sensor.when_line = lambda: send_ws()
 
@@ -47,18 +47,24 @@ def child():
    print("Prepared to send informations...")
    vanne.on()
    counter()
+   os._exit(0)
 
 def parent():
   while True:
-    try:
-        http_server = tornado.httpserver.HTTPServer(application)
-        http_server.listen(8000)
-        main_loop = tornado.ioloop.IOLoop.instance()
-        print("Tornado Server started")
-        main_loop.start()
-    except:
-        print("Exception triggered - Tornado Server stopped.")
-        vanne.off()
+    newpid = os.fork()
+    if newpid == 0:
+      try:
+          http_server = tornado.httpserver.HTTPServer(application)
+          http_server.listen(8000)
+          main_loop = tornado.ioloop.IOLoop.instance()
+          print("Tornado Server started")
+          main_loop.start()
+      except:
+          print("Exception triggered - Tornado Server stopped.")
+          vanne.off()
+    else:
+      continue
+
 
 class MainHandler(tornado.web.RequestHandler):
   def post(self):
