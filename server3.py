@@ -26,10 +26,11 @@ def child():
    def counter():
        while True:
            time.clock()
-           if time.clock() > 20 :
+           if time.clock() > 10 :
                print('waited too long')
+               wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"Litres\\":\\"%s\\",\\"mousse_qr_code\\":\\"%s\\",\\"unlocked\\":\\"false\\"}"}'%(mousse_qr_code, litres, mousse_qr_code))
                vanne.off()
-               os._exit(0)
+               break
            else:
                sensor.when_line = lambda: send_ws()
 
