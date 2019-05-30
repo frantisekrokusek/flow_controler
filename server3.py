@@ -27,10 +27,9 @@ def send_ws():
 def counter():
     while True:
         time.clock()
-        if time.clock() > 100 :
+        if time.clock() > 20 :
             print('waited too long')
             vanne.off()
-            break
         else:
             sensor.when_line = lambda: send_ws()
 
