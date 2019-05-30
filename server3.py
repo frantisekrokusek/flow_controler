@@ -16,6 +16,7 @@ sensor = LineSensor(4)
 
 
 def send_ws():
+    global count
     count += 1
     litres = count / 200
     wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"Litres\\":\\"%s\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code, litres, mousse_qr_code))
