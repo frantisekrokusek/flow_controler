@@ -46,36 +46,33 @@ def child():
    vanne.on()
    counter()
 
-def parent():
-  class MainHandler(tornado.web.RequestHandler):
-    def post(self):
-       print("Request received")
-       data = self.request.body
-       print(data)
-       d = json.loads(data.decode('utf-8'))
-       if d['unlocked'] == "true":
-           print("Mousse is valid, and unlocking !")
-           child()
-       elif d['unlocked'] == "false":
-           print("Mousse is locked !")
-           vanne.off()
-       else:
-           print("Mousse qr_code is wrong!")
 
-  application = tornado.web.Application([(r'/', MainHandler)])
+class MainHandler(tornado.web.RequestHandler):
+  def post(self):
+     print("Request received")
+     data = self.request.body
+     print(data)
+     d = json.loads(data.decode('utf-8'))
+     if d['unlocked'] == "true":
+         print("Mousse is valid, and unlocking !")
+         child()
+     elif d['unlocked'] == "false":
+         print("Mousse is locked !")
+         vanne.off()
+     else:
+         print("Mousse qr_code is wrong!")
 
-  while True:
-    try:
-        http_server = tornado.httpserver.HTTPServer(application)
-        http_server.listen(8000)
-        main_loop = tornado.ioloop.IOLoop.instance()
-        print("Tornado Server started")
-        main_loop.start()
-    except:
-        print("Exception triggered - Tornado Server stopped.")
-        vanne.off()
-        break
+application = tornado.web.Application([(r'/', MainHandler)])
 
-parent()
+try:
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(8000)
+    print("Tornado Server started")
+    main_loop = tornado.ioloop.IOLoop.instance()
+    main_loop.start()
+except:
+    print("Exception triggered - Tornado Server stopped.")
+    vanne.off()
+    break
 
 
