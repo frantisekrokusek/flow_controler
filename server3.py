@@ -22,7 +22,7 @@ def child():
        global wsd
        global mousse_qr_code
        count += 1
-       litres = count / 400
+       litres = count / 300
        wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"Litres\\":\\"%s\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code, litres, mousse_qr_code))
        print('%s Litres Sent'%(litres))
 
