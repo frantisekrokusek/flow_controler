@@ -30,6 +30,7 @@ def counter():
         if time.clock() > 20 :
             print('waited too long')
             vanne.off()
+            os._exit(0)
         else:
             sensor.when_line = lambda: send_ws()
 
@@ -46,7 +47,6 @@ def child():
    print("Prepared to send informations...")
    vanne.on()
    counter()
-   os._exit(0)
 
 def parent():
   while True:
