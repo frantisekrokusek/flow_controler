@@ -17,6 +17,7 @@ sensor = LineSensor(4)
 
 def send_ws():
     global count
+    global wsd
     count += 1
     litres = count / 200
     wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"Litres\\":\\"%s\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code, litres, mousse_qr_code))
@@ -35,6 +36,7 @@ def counter():
 def child():
    print('\nA new child process ',  os.getpid())
    mousse_qr_code = "lewagon242"
+   global wsd
    wsd = create_connection("ws://10.0.0.33:3000/cable")
    wsd.send('{"command":"subscribe","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code))
    global count
