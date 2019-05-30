@@ -1,7 +1,7 @@
 import os
 from gpiozero import LineSensor
 from gpiozero import LED
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
@@ -29,11 +29,10 @@ def child():
    def counter():
        while True:
            time.clock()
-           if time.clock() > 20 :
+           if time.clock() > 100 :
                print('waited too long')
                wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"mousse_qr_code\\":\\"%s\\",\\"unlocked\\":\\"false\\"}"}'%(mousse_qr_code, mousse_qr_code))
                vanne.off()
-               GPIO.output(11,False)
                break
            else:
                sensor.when_line = lambda: send_ws()
@@ -65,6 +64,7 @@ class MainHandler(tornado.web.RequestHandler):
      elif d['unlocked'] == "false":
          print("Mousse is locked !")
          GPIO.output(11,False)
+         vanne.off()
      else:
          print("Mousse qr_code is wrong!")
 
@@ -79,6 +79,7 @@ try:
 except:
     print("Exception triggered - Tornado Server stopped.")
     GPIO.output(11,False)
+    vanne.off()
 
 
 
