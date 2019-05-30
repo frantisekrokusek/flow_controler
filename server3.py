@@ -50,8 +50,16 @@ def child():
    os._exit(0)
 
 def parent(main_loop):
-   print("Tornado Server started")
-   main_loop.start()
+  while True:
+    try:
+        http_server = tornado.httpserver.HTTPServer(application)
+        http_server.listen(8000)
+        main_loop = tornado.ioloop.IOLoop.instance()
+        print("Tornado Server started")
+        main_loop.start()
+    except:
+        print("Exception triggered - Tornado Server stopped.")
+        vanne.off()
 
 class MainHandler(tornado.web.RequestHandler):
   def post(self):
@@ -70,13 +78,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 application = tornado.web.Application([(r'/', MainHandler)])
 
-try:
-    http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(8000)
-    main_loop = tornado.ioloop.IOLoop.instance()
-    parent(main_loop)
 
-except:
-    print("Exception triggered - Tornado Server stopped.")
-    vanne.off()
+parent()
+
 
