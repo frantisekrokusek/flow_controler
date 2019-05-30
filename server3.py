@@ -29,7 +29,7 @@ def child():
    def counter():
        while True:
            time.clock()
-           if time.clock() > 100 :
+           if time.clock() > 20 :
                print('waited too long')
                wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"mousse_qr_code\\":\\"%s\\",\\"unlocked\\":\\"false\\"}"}'%(mousse_qr_code, mousse_qr_code))
                vanne.off()
@@ -64,7 +64,6 @@ class MainHandler(tornado.web.RequestHandler):
          child()
      elif d['unlocked'] == "false":
          print("Mousse is locked !")
-         vanne.off()
          GPIO.output(11,False)
      else:
          print("Mousse qr_code is wrong!")
