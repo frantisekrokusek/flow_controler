@@ -1,7 +1,7 @@
 import os
 from gpiozero import LineSensor
 from gpiozero import LED
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
