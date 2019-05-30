@@ -49,7 +49,7 @@ def child():
    counter()
    os._exit(0)
 
-def parent(main_loop):
+def parent():
   while True:
     try:
         http_server = tornado.httpserver.HTTPServer(application)
