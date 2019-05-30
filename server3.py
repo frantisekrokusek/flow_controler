@@ -12,10 +12,10 @@ import time
 
 vanne = LED(17)
 sensor = LineSensor(4)
-global count
+
+
 
 def send_ws():
-    global count
     count += 1
     litres = count / 200
     wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"Litres\\":\\"%s\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code, litres, mousse_qr_code))
@@ -36,6 +36,7 @@ def child():
    mousse_qr_code = "lewagon242"
    wsd = create_connection("ws://10.0.0.33:3000/cable")
    wsd.send('{"command":"subscribe","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code))
+   global count
    count = 0
    time.sleep(2)
    print("Prepared to send informations...")
