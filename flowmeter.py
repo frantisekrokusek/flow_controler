@@ -14,7 +14,6 @@ def countPulse():
     count += 1
     liters = count / (7.5 * 60)
     print('%s Litres'%(liters));
-    conn = http.client.HTTPSConnection('en03hwbtjrvx4g.x.pipedream.net')
-    conn.request("POST", "/", '{ "pipe_name": "Pilsner"; "quantity": %s }' %(liters), {'Content-Type': 'application/json'})
+    ws.send('Message')
 
 sensor.when_line = countPulse

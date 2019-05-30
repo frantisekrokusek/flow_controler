@@ -14,23 +14,13 @@ vanne = LED(17)
 sensor = LineSensor(4)
 global count
 
-def test():
+def send_ws():
     global count
     count += 1
     litres = count / 200
     wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"Litres\\":\\"%s\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code, litres, mousse_qr_code))
     print('%s Litres Sent'%(litres))
 
-def child():
-   print('\nA new child process ',  os.getpid())
-   mousse_qr_code = "lewagon242"
-   wsd = create_connection("ws://10.0.0.33:3000/cable")
-   wsd.send('{"command":"subscribe","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code))
-   time.sleep(2)
-   print("Prepared to send informations...")
-   vanne.on()
-   count = 0
-        
 def counter():
     while True:
         time.clock()
@@ -39,24 +29,23 @@ def counter():
             vanne.off()
             break
         else:
-            sensor.when_line = lambda: test()
-   os._exit(0)  
+            sensor.when_line = lambda: send_ws()
+
+def child():
+   print('\nA new child process ',  os.getpid())
+   mousse_qr_code = "lewagon242"
+   wsd = create_connection("ws://10.0.0.33:3000/cable")
+   wsd.send('{"command":"subscribe","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code))
+   count = 0
+   time.sleep(2)
+   print("Prepared to send informations...")
+   vanne.on()
+   counter()
+   os._exit(0)
 
 def parent(main_loop):
    print("Tornado Server started")
    main_loop.start()
-   while True:
-      newpid = os.fork()
-      if newpid == 0:
-         child()
-      else:
-         pids = (os.getpid(), newpid)
-         print("parent: %d, child: %d\n" % pids)
-      reply = input("q for quit / c for new fork")
-      if reply == 'c': 
-          continue
-      else:
-          break
 
 class MainHandler(tornado.web.RequestHandler):
   def post(self):
@@ -66,24 +55,22 @@ class MainHandler(tornado.web.RequestHandler):
      d = json.loads(data.decode('utf-8'))
      if d['unlocked'] == "true":
          print("Mousse is valid, and unlocking !")
-         
+         child()
      elif d['unlocked'] == "false":
          print("Mousse is locked !")
          vanne.off()
      else:
-         print("Mousse qr_code is wrong!")      
+         print("Mousse qr_code is wrong!")
 
-application = tornado.web.Application([
-  (r'/', MainHandler)])
+application = tornado.web.Application([(r'/', MainHandler)])
 
-if __name__ == "__main__":
-    try:
-        http_server = tornado.httpserver.HTTPServer(application)
-        http_server.listen(8000)
-        main_loop = tornado.ioloop.IOLoop.instance()
-        parent(main_loop)
+try:
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(8000)
+    main_loop = tornado.ioloop.IOLoop.instance()
+    parent(main_loop)
 
-    except:
-        print("Exception triggered - Tornado Server stopped.")
-        vanne.off()
+except:
+    print("Exception triggered - Tornado Server stopped.")
+    vanne.off()
 
