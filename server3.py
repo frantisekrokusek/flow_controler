@@ -29,12 +29,13 @@ def child():
    def counter():
        while True:
            time.clock()
+           sensor.when_line = lambda: send_ws()
            if time.clock() > 10 :
                print('waited too long')
                wsd.send('{"command":"message","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}","data":"{\\"mousse_qr_code\\":\\"%s\\",\\"unlocked\\":\\"false\\"}"}'%(mousse_qr_code, mousse_qr_code))
                break
            else:
-               sensor.when_line = lambda: send_ws()
+               continue
 
    print('\nA new child process ',  os.getpid())
    global mousse_qr_code
