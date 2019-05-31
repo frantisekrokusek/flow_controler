@@ -1,7 +1,7 @@
 import os
 from gpiozero import LineSensor
 from gpiozero import LED
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
@@ -10,8 +10,8 @@ import json
 from websocket import create_connection
 from signal import pause
 import time
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(11, GPIO.OUT)
+# GPIO.setmode(GPIO.BOARD)
+# GPIO.setup(11, GPIO.OUT)
 
 vanne = LED(17)
 sensor = LineSensor(4)
@@ -58,11 +58,12 @@ class MainHandler(tornado.web.RequestHandler):
      d = json.loads(data.decode('utf-8'))
      if d['unlocked'] == "true":
          print("Mousse is valid, and unlocking !")
-         GPIO.output(11,True)
+         # GPIO.output(11,True)
+         vanne.on()
          child()
      elif d['unlocked'] == "false":
          print("Mousse is locked !")
-         GPIO.output(11,False)
+         # GPIO.output(11,False)
          vanne.off()
      else:
          print("Mousse qr_code is wrong!")
@@ -77,7 +78,7 @@ try:
     main_loop.start()
 except:
     print("Exception triggered - Tornado Server stopped.")
-    GPIO.output(11,False)
+    # GPIO.output(11,False)
     vanne.off()
 
 
