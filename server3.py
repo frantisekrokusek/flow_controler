@@ -41,7 +41,7 @@ def child():
    global mousse_qr_code
    mousse_qr_code = "lewagon242"
    global wsd
-   wsd = create_connection("ws://10.0.0.33:3000/cable")
+   wsd = create_connection("ws://pomplamousse.herokuapp.com/cable")
    wsd.send('{"command":"subscribe","identifier":"{\\"channel\\":\\"TransacChannel\\",\\"mousse_qr_code\\":\\"%s\\"}"}'%(mousse_qr_code))
    global count
    count = 0
