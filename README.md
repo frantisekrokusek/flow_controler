@@ -11,6 +11,7 @@ Connect the red wire to +5V, the black wire to common ground and the yellow sens
 ## Products / devices
 1. Raspberry PI3B+
 2. [Flowmetter]
+3. Electrovanne
 
 ## Application Mock-up
 Here you can find the first draft of the application [mock-up](https://balsamiq.cloud/shvcvri/p4m89qh/r2278?f=N4IgUiBcAMA0IDkpxAYWfAMhkAhHAsjgFo4DSUA2gLoC%2BQA%3D
